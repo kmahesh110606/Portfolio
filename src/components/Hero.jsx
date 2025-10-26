@@ -35,7 +35,7 @@ export default function Hero({ data }) {
       <div className="order-2 md:order-1">
         <h1 className="text-2xl md:text-3xl font-extrabold leading-tight text-center md:text-left">
           {/* Use Vara handwriting animation for the main name. Responsive fontSize to avoid large gaps. */}
-          <VaraText text={"K. Mahesh Chandran"} fontSize={nameSize} strokeWidth={Math.max(1.2, nameSize / 30)} />
+          <VaraText text={"K. Mahesh Chandran"} fontSize={nameSize} strokeWidth={Math.max(1.6, nameSize / 20)} />
         </h1>
         <p className="text-purple-700 font-medium mt-2">{data.title}</p>
         <p className="mt-6 text-gray-700 max-w-2xl">{data.about}</p>
@@ -54,10 +54,10 @@ export default function Hero({ data }) {
       </div>
 
       <div className="flex justify-center md:justify-end relative order-1 md:order-2">
-        <div className="relative w-64 h-64 md:w-[480px] md:h-[480px] flex items-center justify-center overflow-visible">
-          {/* Network behind profile */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Network3D size={420} />
+        <div className="relative w-64 h-64 md:w-[920px] md:h-[920px] flex items-center justify-center overflow-visible">
+          {/* Network behind profile (expanded size) */}
+          <div className="absolute inset-0 flex items-center justify-center" style={{ transform: 'translateX(12%)', zIndex: 10 }}>
+            <Network3D size={1400} />
           </div>
 
           {/* Big round profile circle (profile sits beneath nodes to allow nodes to float over it) */}

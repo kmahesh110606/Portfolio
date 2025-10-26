@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-export default function VaraText({ text, fontUrl, fontSize = 96, strokeWidth = 1.6 }) {
+export default function VaraText({ text, fontUrl, fontSize = 96, strokeWidth = 2 }) {
   const idRef = useRef('vara-' + Math.random().toString(36).slice(2))
 
   useEffect(() => {

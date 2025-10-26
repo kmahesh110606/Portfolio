@@ -32,12 +32,72 @@ body {
   background-color: #ffffff;
 }
 
+/* prevent any accidental horizontal scrolling when large visuals overflow */
+html, body { overflow-x: hidden; }
+
 /* translucent blurred header background used for the sticky header */
 .header-blur {
   background: rgba(255,255,255,0.72);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(16,24,40,0.04);
+}
+
+/* ensure header remains sticky and above overlays */
+.header-blur {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 9999 !important;
+}
+
+/* mobile menu overlay styles + entrance animation */
+@keyframes menuIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.mobile-menu-overlay {
+  background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(250,250,252,0.86));
+  box-shadow: 0 10px 30px rgba(16,24,40,0.08);
+  animation: menuIn 220ms cubic-bezier(.2,.9,.3,1) both;
+  border: 1px solid rgba(16,24,40,0.04);
+  backdrop-filter: blur(8px) saturate(120%);
+}
+.mobile-menu-overlay .w-8 { background: linear-gradient(90deg,#ffd54a,#8b5cf6); color: white }
+
+/* remove hover glow for the dropdown items and keep a simple hover background */
+.mobile-menu-overlay .mobile-menu-item:hover { box-shadow: none; transform: none; background: rgba(0,0,0,0.03); }
+
+/* menu button: remove pill border and background in mobile */
+.menu-btn { border: none !important; background: transparent !important; box-shadow: none !important; }
+.menu-btn .icon { font-size: 1.1rem; line-height: 1 }
+
+/* backdrop when mobile menu is open: dim + blur the page */
+/* removed full-screen backdrop to avoid header blur; dropdown is an absolute panel */
+
+/* make mobile menu items stable: no transform or transition that causes flicker */
+.mobile-menu-overlay,
+.mobile-menu-overlay * {
+  transition: none !important;
+}
+.mobile-menu-overlay .mobile-menu-item {
+  transition: background-color 120ms ease !important;
+  transform: none !important;
+}
+
+/* remove focus/active border on menu button */
+.menu-btn:focus,
+.menu-btn:active,
+.menu-btn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* extra safety: remove any default focus ring on the button and ensure no border when toggled */
+.menu-btn[aria-expanded="true"] {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 h1 {
@@ -234,7 +294,7 @@ h1, h2, h3, h4 { font-weight: 700; }
   box-sizing: border-box;
   transition: min-width 220ms ease, padding 220ms ease, background 220ms ease, color 220ms ease;
 }
-.pill .icon { color: #111827; transition: color 220ms ease; display: inline-flex; align-items: center; justify-content: center; }
+.pill .icon { color: #111827; transition: color 220ms ease; display: inline-flex; align-items: center; justify-content: center; line-height: 1; vertical-align: middle; }
 .pill .label { display: inline-block; max-width: 0; width: 0; opacity: 0; margin-left: 0; transition: max-width 220ms ease, width 220ms ease, opacity 220ms ease, color 220ms ease, margin-left 220ms ease; color: #111827; overflow: hidden; vertical-align: middle; }
 .pill:hover { min-width: 0; padding-left: 12px; padding-right: 12px; background: linear-gradient(90deg,#ffd54a 0%, #8b5cf6 100%); border-color: transparent; }
 .pill:hover .label { color: #fff; max-width: 240px; width: auto; margin-left: 6px; opacity: 1; }
@@ -247,6 +307,21 @@ h1, h2, h3, h4 { font-weight: 700; }
 .pill.icon-only .label { max-width: 0; width: 0; opacity: 0; margin-left: 0; }
 .pill.icon-only:hover { padding-left: 12px; padding-right: 12px; min-width: 0; }
 .pill.icon-only:hover .label { max-width: 240px; width: auto; opacity: 1; color: #fff; margin-left: 8px }
+
+/* Ensure SVG icons are rendered as blocks and perfectly centered inside icon containers */
+.pill .icon svg,
+.pill .icon > svg,
+.pill.icon-only .icon svg {
+  display: block;
+  width: 1.25rem; /* 20px */
+  height: 1.25rem;
+}
+
+/* small tweak for FluentUI icons which sometimes include internal baselines */
+.pill .icon svg [role="img"],
+.pill .icon svg * {
+  display: block;
+}
 
 /* network line styles */
 .network-lines line { stroke-linecap: round; stroke-linejoin: round; }
@@ -262,6 +337,17 @@ h1, h2, h3, h4 { font-weight: 700; }
 
 /* canvas for network lines should sit below DOM nodes but within the network container */
 .network-canvas { z-index: 5; }
+
+/* explicit wrapper for canvas-based network to avoid older `.network-3d` centering rules */
+.network-canvas-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
 
 /* cursor-follow glow */
 .cursor-glow {

@@ -9,24 +9,24 @@ export default function Contact({ contact = {}, socials = [] }) {
   const whatsapp = contact.whatsapp || '918591495253'
   return (
     <div className="grid md:grid-cols-2 gap-6 items-start">
-      <div className="p-6 rounded-lg bg-transparent">
+  <div className="p-6 rounded-lg bg-transparent text-center md:text-left">
         <h3 className="font-semibold text-lg">Get in touch</h3>
         <p className="mt-2 text-gray-700">{contact.note}</p>
-        <div className="mt-4 flex items-center gap-4">
+        <div className="mt-4 flex flex-col md:flex-row items-center md:items-center gap-4 justify-center md:justify-start">
           {/* Mail pill - expands on hover */}
-          <a href={`mailto:${email}`} className="pill icon-only">
+          <a href={`mailto:${email}`} className="pill icon-only mobile-expanded">
             <span className="icon"><Mail12Filled className="w-5 h-5" /></span>
             <span className="label">{email}</span>
           </a>
 
           {/* Call pill */}
-          <a href={`tel:${phone}`} className="pill icon-only">
+          <a href={`tel:${phone}`} className="pill icon-only mobile-expanded">
             <span className="icon">{PeopleCall16Filled ? <PeopleCall16Filled className="w-5 h-5" /> : <FaPhone className="w-5 h-5" />}</span>
             <span className="label">Call {phone}</span>
           </a>
 
           {/* WhatsApp pill */}
-          <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noreferrer" className="pill icon-only">
+          <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noreferrer" className="pill icon-only mobile-expanded">
             <span className="icon"><FaWhatsapp className="w-5 h-5" /></span>
             <span className="label">WhatsApp</span>
           </a>
