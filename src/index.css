@@ -1,0 +1,302 @@
+@import "tailwindcss";
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* force light white background for this portfolio per user preference */
+  color-scheme: light;
+  color: #213547;
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+/* translucent blurred header background used for the sticky header */
+.header-blur {
+  background: rgba(255,255,255,0.72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(16,24,40,0.04);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* utility to render gradient-filled icon/text */
+.gradient-text {
+  background: linear-gradient(90deg, #ffd54a 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* global hover glow: applied when wrapper has class `hover-glow` */
+.hover-glow *:hover {
+  filter: drop-shadow(0 10px 30px rgba(255, 197, 63, 0.18));
+  transform: translateY(-2px);
+}
+
+/* Prevent the global hover translate from moving pills and network nodes (this caused flicker)
+   Pills (contact + socials) should expand in-place but not shift vertically. */
+.hover-glow .pill *:hover,
+.hover-glow .pill:hover .icon,
+.hover-glow .network-node *:hover,
+.hover-glow .network-node:hover {
+  transform: none !important;
+}
+
+/* Ensure the entire network container and overlay icons never get the global hover translate.
+   This prevents any hover state in a parent from nudging the graph. */
+.hover-glow .network-3d *:hover,
+.hover-glow .network-3d:hover,
+.hover-glow .network-icon:hover,
+.hover-glow .network-icon *:hover,
+.hover-glow .network-icon,
+.hover-glow .network-3d {
+  transform: none !important;
+  transition: none !important;
+}
+
+/* Overlay icons should not respond to pointer interactions (we use DOM overlay for visuals only)
+   Keeping pointer-events disabled prevents hover cascades and layout shifts. */
+.network-icon {
+  pointer-events: none !important;
+}
+
+/* name reveal animation */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* carousel animation: slide left continuously */
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.tech-carousel {
+  overflow: hidden;
+  position: relative;
+}
+.tech-track {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  animation: scrollLeft 18s linear infinite;
+}
+
+/* pause on hover */
+.tech-carousel:hover .tech-track { animation-play-state: paused; }
+
+/* make scrolling smooth for anchor links */
+html { scroll-behavior: smooth; }
+
+/* ensure header doesn't cover section headings when scrolled to */
+section[id] { scroll-margin-top: 5rem; }
+
+/* bold headers */
+h1, h2, h3, h4 { font-weight: 700; }
+
+/* network 3d styles */
+.network-3d {
+  position: relative;
+  perspective: 800px;
+  transform-style: preserve-3d;
+}
+.network-node {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  margin-left: -36px;
+  margin-top: -36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s linear, box-shadow 0.12s;
+}
+.network-node .node-inner {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+}
+.network-node .node-inner { background: linear-gradient(90deg, rgba(255,213,74,0.12), rgba(139,92,246,0.12)); color: inherit; }
+.network-node .node-inner svg { width: 28px; height: 28px; color: currentColor; filter: drop-shadow(0 8px 26px rgba(139,92,246,0.14)); }
+.network-node:hover .node-inner { transform: scale(1.08); box-shadow: 0 10px 30px rgba(255,197,63,0.16); }
+
+/* subtle float animation for nodes */
+@keyframes floaty {
+  0% { transform: translateY(0) }
+  50% { transform: translateY(-6px) }
+  100% { transform: translateY(0) }
+}
+.network-node { animation: floaty 4s ease-in-out infinite; }
+
+/* when nodes are static we disable the float animation */
+.network-node.static { animation: none !important; }
+
+/* When network is static, prevent any hover transforms on the inner node to avoid bbox changes that
+   move SVG line endpoints and cause flicker. */
+.network-node.static .node-inner,
+.network-node.static:hover .node-inner,
+.hover-glow .network-node .node-inner {
+  transform: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+}
+
+/* cursive write animation for name */
+.cursive-write {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: 'Brush Script MT', 'Pacifico', 'Dancing Script', cursive;
+  font-style: italic;
+}
+.cursive-write .text-inner {
+  display: inline-block;
+  transform-origin: left;
+  animation: write 2200ms steps(40,end) forwards;
+}
+@keyframes write {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* nav pill tweak: ensure it doesn't cause layout shift */
+.nav-pill {
+  position: absolute;
+  left: 50%;
+  top: -48px;
+  transform: translateX(-50%);
+}
+
+/* pill expansion helper used by contact buttons */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  overflow: hidden;
+  white-space: nowrap;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-sizing: border-box;
+  transition: min-width 220ms ease, padding 220ms ease, background 220ms ease, color 220ms ease;
+}
+.pill .icon { color: #111827; transition: color 220ms ease; display: inline-flex; align-items: center; justify-content: center; }
+.pill .label { display: inline-block; max-width: 0; width: 0; opacity: 0; margin-left: 0; transition: max-width 220ms ease, width 220ms ease, opacity 220ms ease, color 220ms ease, margin-left 220ms ease; color: #111827; overflow: hidden; vertical-align: middle; }
+.pill:hover { min-width: 0; padding-left: 12px; padding-right: 12px; background: linear-gradient(90deg,#ffd54a 0%, #8b5cf6 100%); border-color: transparent; }
+.pill:hover .label { color: #fff; max-width: 240px; width: auto; margin-left: 6px; opacity: 1; }
+.pill:hover .icon { color: #fff; }
+.pill:hover .label { max-width: 240px; opacity: 1; }
+
+/* icon-only circular pills (use class `icon-only`) keep exact circle and don't expand padding */
+.pill.icon-only { padding: 0; min-width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+/* allow icon-only pills to reveal their label on hover (they expand in-place) */
+.pill.icon-only .label { max-width: 0; width: 0; opacity: 0; margin-left: 0; }
+.pill.icon-only:hover { padding-left: 12px; padding-right: 12px; min-width: 0; }
+.pill.icon-only:hover .label { max-width: 240px; width: auto; opacity: 1; color: #fff; margin-left: 8px }
+
+/* network line styles */
+.network-lines line { stroke-linecap: round; stroke-linejoin: round; }
+
+/* make the network sit above the profile rather than behind */
+.network-3d { z-index: 10; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); touch-action: none; cursor: grab; }
+.network-3d.grabbing { cursor: grabbing; }
+
+.network-inner { will-change: transform; }
+
+/* profile circle should be underneath network to allow nodes to float over it */
+.hero-profile { position: relative; z-index: 40; }
+
+/* canvas for network lines should sit below DOM nodes but within the network container */
+.network-canvas { z-index: 5; }
+
+/* cursor-follow glow */
+.cursor-glow {
+  position: fixed;
+  pointer-events: none;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  /* stronger gold -> purple radial gradient for a consistent site-wide glow */
+  background: radial-gradient(circle at center, rgba(255,197,63,0.38) 0%, rgba(255,197,63,0.22) 18%, rgba(139,92,246,0.18) 42%, rgba(139,92,246,0.06) 66%, transparent 85%);
+  mix-blend-mode: screen;
+  transition: width 120ms ease, height 120ms ease, opacity 120ms ease, transform 120ms ease;
+  z-index: 99999;
+  opacity: 1;
+}
+
+/* a small concentrated dot in the center for sharper pointer feedback */
+.cursor-glow::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #fff 0%, rgba(255,197,63,0.98) 35%, rgba(255,197,63,0.6) 60%, transparent 100%);
+  box-shadow: 0 6px 26px rgba(255,197,63,0.18);
+}
+
+/* Vara svg containers: allow overflow so handwritten strokes don't clip */
+.vara-text svg { overflow: visible; }
+
+/* Typewriter caret smaller and darker */
+.typewriter > span[aria-hidden="true"] { background: #111827; width: 6px; height: 18px; display: inline-block; vertical-align: middle; margin-left: 6px; }
+
+
