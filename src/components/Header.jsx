@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { MegaphoneFilled, HeadphonesColor, PeopleCall16Filled, Dismiss24Regular } from '@fluentui/react-icons'
+import { MegaphoneLoudFilled, HeadphonesColor, PersonCallFilled} from '@fluentui/react-icons'
 
 export default function Header({ siteTitle = 'Portfolio', nav = [] }) {
   const NAV_ICONS = {
-    projects: MegaphoneFilled,
+    projects: MegaphoneLoudFilled,
     skills: HeadphonesColor,
-    contact: PeopleCall16Filled,
+    contact: PersonCallFilled,
   }
 
   const [open, setOpen] = useState(false)
@@ -30,8 +30,9 @@ export default function Header({ siteTitle = 'Portfolio', nav = [] }) {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 header-blur">
-      <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between relative">
+    <div className='sticky top-0 z-50'>
+    <header className="sticky top-10 z-50 header-blur">
+      <div className="sticky top-20 max-w-5xl mx-auto px-6 py-3 flex items-center justify-between relative">
         <a href="#home" className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-purple-600 flex items-center justify-center text-white font-semibold">
             {siteTitle.split(' ').map((s) => s[0]).slice(0,2).join('')}
@@ -39,13 +40,13 @@ export default function Header({ siteTitle = 'Portfolio', nav = [] }) {
           <div className="text-lg font-medium text-gray-800">{siteTitle}</div>
         </a>
 
-        <nav className="hidden md:flex items-center gap-3">
+        <nav className="hidden md:flex items-center gap-4">
           {nav.map((n) => {
             const Icon = NAV_ICONS[n.id]
             return (
               <a key={n.id} href={`#${n.id}`} className="pill" aria-label={n.label}>
                 <span className="icon">
-                  {Icon ? <Icon className="w-5 h-5" /> : null}
+                  {Icon ? <Icon className="md:flex items-center mx-2 w-5 h-5" /> : null}
                 </span>
                 <span className="label">{n.label}</span>
               </a>
@@ -64,8 +65,8 @@ export default function Header({ siteTitle = 'Portfolio', nav = [] }) {
             title="Open menu"
             style={{ border: 'none', background: 'transparent' }}
           >
-            <span className="icon">☰</span>
-            <span className="label">Menu</span>
+            <span className="icon">☰ </span>
+            <span className="label font-large font-weight:800 text-purple-800"></span>
           </button>
 
           {/* absolute dropdown panel */}
@@ -83,15 +84,15 @@ export default function Header({ siteTitle = 'Portfolio', nav = [] }) {
                       <a
                         key={n.id}
                         href={`#${n.id}`}
-                        className="flex items-center gap-3 px-2 py-2 rounded-md mobile-menu-item"
+                        className="flex items-center gap-3 px-2 py-2 backdrop-blur-md rounded-md mobile-menu-item"
                         onClick={() => setOpen(false)}
                       >
                         <span className="icon" style={{ color: '#111827' }}>
-                          {Icon ? <Icon className="w-5 h-5" /> : (
+                          {Icon ? <Icon className="w-5 h-5 text-purple-800" /> : (
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="3"/></svg>
                           )}
                         </span>
-                        <span className="font-medium">{n.label}</span>
+                        <span className="font-large text-purple-800">{n.label}</span>
                       </a>
                     )
                   })}
@@ -101,5 +102,6 @@ export default function Header({ siteTitle = 'Portfolio', nav = [] }) {
         </div>
       </div>
     </header>
+    </div>
   )
 }

@@ -1,9 +1,9 @@
 // Fill this file with your personal data. The app consumes this shape.
 const data = {
-  name: 'Your Name',
+  name: 'kmahesh110606.com',
   title: 'Computer Science (AIML) Engineering Student',
-  tagline: 'I build small ML-powered tools, experiments and web apps.',
-  about: `I'm a Computer Science (AIML) engineering student focused on machine learning, data engineering and building reproducible web tools. Replace this paragraph with a short bio describing your interests, current year, and what you're looking for (internships, projects, research).`,
+  tagline: 'Love Tech!!.',
+  about: `I'm a Computer Science (AIML) engineering student focused on machine learning, data engineering and building reproducible web tools.`,
 
   // navigation entries (anchors on the single page)
   nav: [
@@ -17,9 +17,9 @@ const data = {
 
   // social links
   socials: [
-    { name: 'GitHub', href: 'https://github.com/your-username' },
-    { name: 'LinkedIn', href: 'https://linkedin.com/in/your-profile' },
-    { name: 'Email', href: 'mailto:you@example.com' },
+    { name: 'GitHub', href: 'https://github.com/kmahesh110606' },
+    { name: 'LinkedIn', href: 'https://linkedin.com/in/kmahesh110606' },
+    { name: 'Instagram', href: 'https://instagram.com/kmahesh110606' },
   ],
 
   // skills grouped by category. `icon` is a free-text identifier you can use
@@ -30,34 +30,30 @@ const data = {
       items: ['Python', 'C/C++', 'JavaScript', 'Data Structures', 'Algorithms'],
     },
     {
-      category: 'Machine Learning / AI',
-      items: ['PyTorch', 'TensorFlow', 'scikit-learn', 'Transformers', 'Computer Vision'],
-    },
-    {
-      category: 'Data & DevOps',
-      items: ['Pandas', 'SQL', 'Docker', 'AWS', 'ML Pipelines'],
+      category: 'Cloud',
+      items: ['GitHub Pages', 'Netlify', 'Render', 'Microsoft Azure'],
     },
     {
       category: 'Frontend',
-      items: ['React', 'Tailwind CSS', 'Vite', 'TypeScript (optional)'],
+      items: ['React', 'Tailwind CSS', 'Vite', ''],
     },
   ],
 
   // projects - fill with your projects, links and tech stack
   projects: [
     {
-      title: 'Example ML Project',
+      title: 'VHome',
       description:
-        'A short description of the project: problem solved, your role, and the tech used.',
-      link: '#',
-      tech: ['Python', 'PyTorch', 'Flask'],
+        'A one stop gateway to all services and websites used by students of VIT Chennai',
+      link: 'https://vhome.co.in',
+      tech: ['React', 'Vite', 'TailWindCSS', 'HTML', 'CSS', 'JavaScript', 'FluentUI Icons Library',],
     },
     {
-      title: 'Portfolio Website (this template)',
+      title: 'WorkSpace OS',
       description:
-        'Single-page portfolio built with React + Tailwind. Fill data.js to customise.',
+        'A Cloud-Based OS that stays in the Web, accessible from wherever you are!!',
       link: '#',
-      tech: ['React', 'Tailwind'],
+      tech: ['Django', 'Python', 'Python-Models', 'JavaScript', 'HTML', 'CSS', 'Microsoft Azure (Hosting)'],
     },
   ],
 

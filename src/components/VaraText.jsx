@@ -47,5 +47,12 @@ export default function VaraText({ text, fontUrl, fontSize = 96, strokeWidth = 2
     }
   }, [text, fontUrl, fontSize, strokeWidth])
 
-  return <div id={idRef.current} className="vara-text z-[20] inline-block" style={{ display: 'inline-block', overflow: 'visible', paddingLeft: 6 }} aria-hidden="true" />
+  return (
+    <div
+      id={idRef.current}
+      className="vara-text z-[20] block select-none"
+      style={{ overflow: 'visible', paddingLeft: 6, pointerEvents: 'none' }}
+      aria-hidden="true"
+    />
+  )
 }
