@@ -39,6 +39,29 @@ function ClickBurst() {
   )
 }
 
+function Typewriter({ text, speed = 80 }) {
+  const [displayedText, setDisplayedText] = useState('')
+  const [isComplete, setIsComplete] = useState(false)
+
+  useEffect(() => {
+    if (displayedText.length < text.length) {
+      const timer = setTimeout(() => {
+        setDisplayedText(text.slice(0, displayedText.length + 1))
+      }, speed)
+      return () => clearTimeout(timer)
+    } else if (displayedText.length === text.length) {
+      setIsComplete(true)
+    }
+  }, [displayedText, text, speed])
+
+  return (
+    <span className={`typewriter ${isComplete ? 'complete' : ''}`}>
+      {displayedText}
+      {!isComplete && <span className="cursor">|</span>}
+    </span>
+  )
+}
+
 function useReveal() {
   useEffect(() => {
     const elements = document.querySelectorAll('[data-reveal]')
@@ -131,6 +154,29 @@ function useMagneticButtons() {
   }, [])
 }
 
+function CustomCursor() {
+  const [position, setPosition] = useState({ x: -999, y: -999 })
+
+  useEffect(() => {
+    function onPointerMove(event) {
+      setPosition({ x: event.clientX, y: event.clientY })
+    }
+
+    window.addEventListener('pointermove', onPointerMove)
+    return () => window.removeEventListener('pointermove', onPointerMove)
+  }, [])
+
+  return (
+    <div
+      className="custom-cursor-glow"
+      style={{
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+      }}
+    />
+  )
+}
+
 function MotionSystem() {
   const [progress, setProgress] = useState(0)
 
@@ -165,6 +211,7 @@ function MotionSystem() {
 
   return (
     <>
+      <CustomCursor />
       <div className="scroll-meter" style={{ transform: `scaleX(${progress})` }} />
     </>
   )
@@ -173,6 +220,8 @@ function MotionSystem() {
 function ProjectsStack({ projects = [] }) {
   const trackRef = useRef(null)
   const [activeIndex, setActiveIndex] = useState(0)
+  const userInteractingRef = useRef(false)
+  const interactionTimeoutRef = useRef(null)
 
   function scrollToIndex(index) {
     const track = trackRef.current
@@ -182,21 +231,42 @@ function ProjectsStack({ projects = [] }) {
     const card = track.querySelector(`[data-index="${safeIndex}"]`)
     if (!card) return
 
-    card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+    // Scroll carousel WITHOUT affecting page scroll
+    const cardCenter = card.offsetLeft + card.clientWidth / 2
+    const viewCenter = track.clientWidth / 2
+    const targetScroll = cardCenter - viewCenter
+    
+    track.scrollLeft = targetScroll
     setActiveIndex(safeIndex)
   }
 
   function next() {
+    userInteractingRef.current = true
+    clearTimeout(interactionTimeoutRef.current)
     scrollToIndex((activeIndex + 1) % projects.length)
+    interactionTimeoutRef.current = setTimeout(() => {
+      userInteractingRef.current = false
+    }, 2500)
   }
 
   function prev() {
+    userInteractingRef.current = true
+    clearTimeout(interactionTimeoutRef.current)
     scrollToIndex((activeIndex - 1 + projects.length) % projects.length)
+    interactionTimeoutRef.current = setTimeout(() => {
+      userInteractingRef.current = false
+    }, 2500)
   }
 
   function onTrackScroll() {
     const track = trackRef.current
     if (!track) return
+
+    userInteractingRef.current = true
+    clearTimeout(interactionTimeoutRef.current)
+    interactionTimeoutRef.current = setTimeout(() => {
+      userInteractingRef.current = false
+    }, 3000)
 
     const cards = Array.from(track.querySelectorAll('.stack-card'))
     if (!cards.length) return
@@ -225,11 +295,13 @@ function ProjectsStack({ projects = [] }) {
     return () => track.removeEventListener('scroll', handler)
   }, [projects.length])
 
-  // Auto-scroll carousel every 6 seconds
+  // Auto-scroll carousel every 6 seconds - ONLY when user is not interacting
   useEffect(() => {
     if (!projects.length) return
     
     const interval = setInterval(() => {
+      if (userInteractingRef.current) return
+      
       setActiveIndex((currentIndex) => {
         const nextIndex = (currentIndex + 1) % projects.length
         const track = trackRef.current
@@ -237,7 +309,12 @@ function ProjectsStack({ projects = [] }) {
         
         const card = track.querySelector(`[data-index="${nextIndex}"]`)
         if (card) {
-          card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+          // Scroll carousel WITHOUT affecting page scroll
+          const cardCenter = card.offsetLeft + card.clientWidth / 2
+          const viewCenter = track.clientWidth / 2
+          const targetScroll = cardCenter - viewCenter
+          
+          track.scrollLeft = targetScroll
         }
         return nextIndex
       })
@@ -381,7 +458,7 @@ function App() {
       <main>
         <section id="home" className="hero" data-reveal>
           <p className="hero-kicker">SURREAL INTERFACE // 2026</p>
-          <h1 className="hero-title">{data.title}</h1>
+          <h1 className="hero-title"><Typewriter text={data.name} speed={60} /></h1>
           <p className="hero-about">{data.about}</p>
           <div className="hero-actions">
             <a href="#projects" className="cta cta-primary magnetic-btn">Launch Projects</a>
