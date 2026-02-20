@@ -133,10 +133,6 @@ function useMagneticButtons() {
 
 function MotionSystem() {
   const [progress, setProgress] = useState(0)
-  const cursorRef = useRef(null)
-  const targetRef = useRef({ x: 0, y: 0 })
-  const currentRef = useRef({ x: 0, y: 0 })
-  const rafRef = useRef(0)
 
   useEffect(() => {
     function updateFromScroll() {
@@ -149,46 +145,27 @@ function MotionSystem() {
     }
 
     function onPointerMove(event) {
-      targetRef.current = { x: event.clientX, y: event.clientY }
       const nx = (event.clientX / window.innerWidth - 0.5) * 2
       const ny = (event.clientY / window.innerHeight - 0.5) * 2
       document.documentElement.style.setProperty('--mx', `${nx}`)
       document.documentElement.style.setProperty('--my', `${ny}`)
     }
 
-    function tick() {
-      const cursor = cursorRef.current
-      const target = targetRef.current
-      const current = currentRef.current
-
-      current.x += (target.x - current.x) * 0.16
-      current.y += (target.y - current.y) * 0.16
-
-      if (cursor) {
-        cursor.style.transform = `translate3d(${current.x}px, ${current.y}px, 0)`
-      }
-
-      rafRef.current = window.requestAnimationFrame(tick)
-    }
-
     updateFromScroll()
     window.addEventListener('scroll', updateFromScroll, { passive: true })
     window.addEventListener('resize', updateFromScroll)
     window.addEventListener('pointermove', onPointerMove)
-    rafRef.current = window.requestAnimationFrame(tick)
 
     return () => {
       window.removeEventListener('scroll', updateFromScroll)
       window.removeEventListener('resize', updateFromScroll)
       window.removeEventListener('pointermove', onPointerMove)
-      window.cancelAnimationFrame(rafRef.current)
     }
   }, [])
 
   return (
     <>
       <div className="scroll-meter" style={{ transform: `scaleX(${progress})` }} />
-      <div className="cursor-super-glow" ref={cursorRef} aria-hidden="true" />
     </>
   )
 }
@@ -246,6 +223,27 @@ function ProjectsStack({ projects = [] }) {
     const handler = () => onTrackScroll()
     track.addEventListener('scroll', handler, { passive: true })
     return () => track.removeEventListener('scroll', handler)
+  }, [projects.length])
+
+  // Auto-scroll carousel every 6 seconds
+  useEffect(() => {
+    if (!projects.length) return
+    
+    const interval = setInterval(() => {
+      setActiveIndex((currentIndex) => {
+        const nextIndex = (currentIndex + 1) % projects.length
+        const track = trackRef.current
+        if (!track) return nextIndex
+        
+        const card = track.querySelector(`[data-index="${nextIndex}"]`)
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+        }
+        return nextIndex
+      })
+    }, 6000)
+    
+    return () => clearInterval(interval)
   }, [projects.length])
 
   return (
@@ -327,11 +325,11 @@ function App() {
   const activeSection = useActiveSection(navIds)
 
   const particles = useMemo(
-    () => Array.from({ length: 18 }, (_, index) => ({
+    () => Array.from({ length: 8 }, (_, index) => ({
       id: index,
       left: `${Math.random() * 100}%`,
       top: `${Math.random() * 100}%`,
-      duration: `${10 + Math.random() * 12}s`,
+      duration: `${16 + Math.random() * 12}s`,
       delay: `${Math.random() * 6}s`,
     })),
     [],
