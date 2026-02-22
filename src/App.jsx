@@ -84,6 +84,38 @@ function useReveal() {
   }, [])
 }
 
+function useEducationStaggerReveal() {
+  useEffect(() => {
+    const items = document.querySelectorAll('.education-item')
+    if (!items.length) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.24, rootMargin: '0px 0px -8% 0px' },
+    )
+
+    items.forEach((item) => observer.observe(item))
+    return () => observer.disconnect()
+  }, [])
+}
+
+function getSkillIconVariant(skill = '') {
+  const variants = ['variant-1', 'variant-2', 'variant-3', 'variant-4', 'variant-5']
+  let hash = 0
+  for (let index = 0; index < skill.length; index += 1) {
+    hash = (hash << 5) - hash + skill.charCodeAt(index)
+    hash |= 0
+  }
+  return variants[Math.abs(hash) % variants.length]
+}
+
 function useActiveSection(sectionIds = []) {
   const [activeSection, setActiveSection] = useState(sectionIds[0] || '')
 
@@ -378,7 +410,11 @@ function EducationTimeline({ entries = [] }) {
       <div className="education-vertical">
         <div className="timeline-track-vertical" aria-hidden="true" />
         {entries.map((entry, index) => (
-          <article key={`${entry.institution}-${entry.duration}`} className="education-item timeline-item vertical-item">
+          <article
+            key={`${entry.institution}-${entry.duration}`}
+            className="education-item timeline-item vertical-item"
+            style={{ '--edu-delay': `${index * 130}ms` }}
+          >
             <span className="timeline-dot vertical-dot" aria-hidden="true" />
             <span className="timeline-index">{String(index + 1).padStart(2, '0')}</span>
             <h3>{entry.institution}</h3>
@@ -395,59 +431,54 @@ function EducationTimeline({ entries = [] }) {
 
 function App() {
   useReveal()
+  useEducationStaggerReveal()
   useMagneticButtons()
+
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
 
   const skillGroups = useMemo(() => data.skills || [], [])
   const navIds = useMemo(() => data.nav.map((item) => item.id), [])
   const activeSection = useActiveSection(navIds)
 
-  const particles = useMemo(
-    () => Array.from({ length: 8 }, (_, index) => ({
-      id: index,
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      duration: `${16 + Math.random() * 12}s`,
-      delay: `${Math.random() * 6}s`,
-    })),
-    [],
-  )
+  useEffect(() => {
+    function onResize() {
+      if (window.innerWidth > 768) {
+        setIsMobileNavOpen(false)
+      }
+    }
+
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   return (
     <div className="portfolio-shell">
       <ClickBurst />
       <MotionSystem />
 
-      <div className="vr-stage" aria-hidden="true">
-        <div className="aurora-layer aurora-a" />
-        <div className="aurora-layer aurora-b" />
-        <div className="aurora-layer aurora-c" />
-        <div className="grid-tunnel" />
-        {particles.map((particle) => (
-          <span
-            key={particle.id}
-            className="floating-particle"
-            style={{
-              left: particle.left,
-              top: particle.top,
-              animationDuration: particle.duration,
-              animationDelay: particle.delay,
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="blob blob-one" />
-      <div className="blob blob-two" />
-      <div className="blob blob-three" />
-
       <header className="site-header">
-        <a className="brand" href="#home">{data.name}</a>
-        <nav className="site-nav">
+        <div className="site-header-top">
+          <a className="brand" href="#home">{data.name}</a>
+          <div className="header-actions">
+            <button
+              type="button"
+              className={`nav-toggle ${isMobileNavOpen ? 'open' : ''}`}
+              onClick={() => setIsMobileNavOpen((prev) => !prev)}
+              aria-label={isMobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isMobileNavOpen}
+              aria-controls="primary-nav"
+            >
+              {isMobileNavOpen ? 'Close' : 'Menu'}
+            </button>
+          </div>
+        </div>
+        <nav id="primary-nav" className={`site-nav ${isMobileNavOpen ? 'open' : ''}`}>
           {data.nav.map((item) => (
             <a
               key={item.id}
               href={`#${item.id}`}
               className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
+              onClick={() => setIsMobileNavOpen(false)}
             >
               {item.label}
             </a>
@@ -480,13 +511,19 @@ function App() {
 
         <section id="skills" className="section" data-reveal>
           <h2 className="section-title">Skills</h2>
-          <div className="skills-grid">
+          <div
+            className="skills-grid"
+            style={{ '--skills-cols': Math.max(1, skillGroups.length) }}
+          >
             {skillGroups.map((group) => (
               <article key={group.category} className="skills-panel">
                 <h3 className="skills-category">{group.category}</h3>
                 <div className="skill-cloud">
                   {group.items?.map((skill) => (
-                    <span key={`${group.category}-${skill}`} className="skill-chip">{skill}</span>
+                    <span key={`${group.category}-${skill}`} className="skill-chip">
+                      <span className={`skill-icon ${getSkillIconVariant(skill)}`} aria-hidden="true" />
+                      <span>{skill}</span>
+                    </span>
                   ))}
                 </div>
               </article>
@@ -568,6 +605,11 @@ function App() {
           </div>
         </section>
       </main>
+
+      <footer className="site-footer">
+        <p>All rights reserved, K Mahesh Chandran</p>
+        <p>{data.contact.address || data.contact.location || 'Address: Add your address in data.js'}</p>
+      </footer>
     </div>
   )
 }
