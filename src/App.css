@@ -2,3 +2,21 @@
   width: 100%;
   min-height: 100vh;
 }
+.header {
+  position: fixed;
+  top: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1400px, calc(100% - 40px));
+  padding: 24px;
+  display: block;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(55, 34, 2, 0.9);
+  backdrop-filter: blur(16px);
+  gap: 16px;
+  z-index: 1000;
+  border-radius: 40px;
+  box-shadow: 0 4px 30px rgba(108, 63, 2, 0.1);
+  transition: all 0.3s ease;
+}

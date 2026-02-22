@@ -1,5 +1,43 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { FaGithub, FaInstagram, FaLinkedin, FaGlobe } from 'react-icons/fa'
+import { FaGithub, FaInstagram, FaLinkedin, FaGlobe, FaDatabase, FaFileWord, FaFileExcel, FaFilePowerpoint } from 'react-icons/fa'
+import {
+  SiAdobexd,
+  SiAdobeillustrator,
+  SiAdobephotoshop,
+  SiAssemblyscript,
+  SiBootstrap,
+  SiC,
+  SiCanva,
+  SiCplusplus,
+  SiCsharp,
+  SiCss3,
+  SiDjango,
+  SiDocker,
+  SiDotnet,
+  SiFastapi,
+  SiFigma,
+  SiFlask,
+  SiGit,
+  SiHtml5,
+  SiJavascript,
+  SiLinux,
+  SiMysql,
+  SiNotion,
+  SiOpenai,
+  SiOpenjdk,
+  SiPostgresql,
+  SiPostman,
+  SiPython,
+  SiReact,
+  SiRedis,
+  SiSocketdotio,
+  SiTailwindcss,
+  SiTypescript,
+  SiVite,
+  SiVisualstudio,
+  SiVisualstudiocode,
+  SiWindows11,
+} from 'react-icons/si'
 import './App.css'
 import data from './data'
 
@@ -7,6 +45,136 @@ const SOCIAL_ICON_MAP = {
   github: FaGithub,
   linkedin: FaLinkedin,
   instagram: FaInstagram,
+}
+
+const SKILL_ICON_MAP = {
+  c: SiC,
+  'c++': SiCplusplus,
+  'c#': SiCsharp,
+  java: SiOpenjdk,
+  python: SiPython,
+  javascript: SiJavascript,
+  typescript: SiTypescript,
+  sqlite3: FaDatabase,
+  sql: SiMysql,
+  postgresql: SiPostgresql,
+  mysql: SiMysql,
+  xaml: SiWindows11,
+  html: SiHtml5,
+  html5: SiHtml5,
+  css: SiCss3,
+  'x86 assembly': SiAssemblyscript,
+
+  '.net': SiDotnet,
+  flask: SiFlask,
+  django: SiDjango,
+  fastapi: SiFastapi,
+  react: SiReact,
+  'react.js': SiReact,
+  vite: SiVite,
+  'tailwind css': SiTailwindcss,
+  tailwindcss: SiTailwindcss,
+  bootstrap: SiBootstrap,
+  winui3: SiWindows11,
+  winforms: SiDotnet,
+  uwp: SiWindows11,
+  redis: SiRedis,
+  websockets: SiSocketdotio,
+
+  canva: SiCanva,
+  'adobe photoshop': SiAdobephotoshop,
+  'dall·e': SiOpenai,
+  'dall-e': SiOpenai,
+  'adobe illustrator': SiAdobeillustrator,
+  figma: SiFigma,
+  'adobe xd': SiAdobexd,
+
+  'microsoft word': FaFileWord,
+  'microsoft excel': FaFileExcel,
+  'microsoft access': FaDatabase,
+  'microsoft powerpoint': FaFilePowerpoint,
+  windows: SiWindows11,
+  linux: SiLinux,
+  'visual studio': SiVisualstudio,
+  'visual studio code': SiVisualstudiocode,
+  postman: SiPostman,
+  'google docs': FaGlobe,
+  'google slides': FaGlobe,
+  git: SiGit,
+  github: FaGithub,
+  docker: SiDocker,
+  notion: SiNotion,
+}
+
+const SKILL_ICON_COLOR_MAP = {
+  c: '#A8B9CC',
+  'c++': '#00599C',
+  'c#': '#68217A',
+  java: '#f89820',
+  python: '#3776AB',
+  javascript: '#F7DF1E',
+  typescript: '#3178C6',
+  sqlite3: '#003B57',
+  sql: '#4479A1',
+  postgresql: '#336791',
+  mysql: '#4479A1',
+  xaml: '#0078D4',
+  html: '#E34F26',
+  html5: '#E34F26',
+  css: '#1572B6',
+  'x86 assembly': '#A3A3A3',
+
+  '.net': '#512BD4',
+  flask: '#FFFFFF',
+  django: '#092E20',
+  fastapi: '#009688',
+  react: '#61DAFB',
+  'react.js': '#61DAFB',
+  vite: '#646CFF',
+  'tailwind css': '#06B6D4',
+  tailwindcss: '#06B6D4',
+  bootstrap: '#7952B3',
+  winui3: '#0078D4',
+  winforms: '#512BD4',
+  uwp: '#0078D4',
+  redis: '#DC382D',
+  websockets: '#25c2a0',
+
+  canva: '#00C4CC',
+  'adobe photoshop': '#31A8FF',
+  'dall·e': '#10A37F',
+  'dall-e': '#10A37F',
+  'adobe illustrator': '#FF9A00',
+  figma: '#F24E1E',
+  'adobe xd': '#FF61F6',
+
+  'microsoft word': '#185ABD',
+  'microsoft excel': '#217346',
+  'microsoft access': '#A4373A',
+  'microsoft powerpoint': '#B7472A',
+  windows: '#0078D4',
+  linux: '#FCC624',
+  'visual studio': '#5C2D91',
+  'visual studio code': '#007ACC',
+  postman: '#FF6C37',
+  git: '#F05032',
+  github: '#FFFFFF',
+  docker: '#2496ED',
+  notion: '#FFFFFF',
+}
+
+function normalizeSkillName(skill = '') {
+  return skill.toLowerCase().replace(/\s+/g, ' ').trim()
+}
+
+function getSkillIcon(skill = '') {
+  const normalizedName = normalizeSkillName(skill)
+  return SKILL_ICON_MAP[normalizedName] || FaGlobe
+}
+
+function getSkillIconColor(skill = '') {
+  const normalizedName = normalizeSkillName(skill)
+  return SKILL_ICON_COLOR_MAP[normalizedName] || '#fff3dd'
 }
 
 function ClickBurst() {
@@ -106,16 +274,6 @@ function useEducationStaggerReveal() {
   }, [])
 }
 
-function getSkillIconVariant(skill = '') {
-  const variants = ['variant-1', 'variant-2', 'variant-3', 'variant-4', 'variant-5']
-  let hash = 0
-  for (let index = 0; index < skill.length; index += 1) {
-    hash = (hash << 5) - hash + skill.charCodeAt(index)
-    hash |= 0
-  }
-  return variants[Math.abs(hash) % variants.length]
-}
-
 function useActiveSection(sectionIds = []) {
   const [activeSection, setActiveSection] = useState(sectionIds[0] || '')
 
@@ -139,7 +297,7 @@ function useActiveSection(sectionIds = []) {
         }
       })
 
-      setActiveSection(closestId)
+      setActiveSection((current) => (current === closestId ? current : closestId))
     }
 
     updateActive()
@@ -187,26 +345,38 @@ function useMagneticButtons() {
 }
 
 function CustomCursor() {
-  const [position, setPosition] = useState({ x: -999, y: -999 })
+  const cursorRef = useRef(null)
+  const frameRef = useRef(0)
 
   useEffect(() => {
+    let nextX = -999
+    let nextY = -999
+
+    function paint() {
+      frameRef.current = 0
+      if (!cursorRef.current) return
+      cursorRef.current.style.left = `${nextX}px`
+      cursorRef.current.style.top = `${nextY}px`
+    }
+
     function onPointerMove(event) {
-      setPosition({ x: event.clientX, y: event.clientY })
+      nextX = event.clientX
+      nextY = event.clientY
+      if (!frameRef.current) {
+        frameRef.current = window.requestAnimationFrame(paint)
+      }
     }
 
     window.addEventListener('pointermove', onPointerMove)
-    return () => window.removeEventListener('pointermove', onPointerMove)
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove)
+      if (frameRef.current) {
+        window.cancelAnimationFrame(frameRef.current)
+      }
+    }
   }, [])
 
-  return (
-    <div
-      className="custom-cursor-glow"
-      style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-      }}
-    />
-  )
+  return <div ref={cursorRef} className="custom-cursor-glow" />
 }
 
 function MotionSystem() {
@@ -217,7 +387,7 @@ function MotionSystem() {
       const max = document.documentElement.scrollHeight - window.innerHeight
       const ratio = max > 0 ? window.scrollY / max : 0
       const nextProgress = Math.min(1, Math.max(0, ratio))
-      setProgress(nextProgress)
+      setProgress((current) => (Math.abs(current - nextProgress) < 0.001 ? current : nextProgress))
       document.documentElement.style.setProperty('--scroll-progress', `${nextProgress}`)
       document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`)
     }
@@ -488,7 +658,6 @@ function App() {
 
       <main>
         <section id="home" className="hero" data-reveal>
-          <p className="hero-kicker">SURREAL INTERFACE // 2026</p>
           <h1 className="hero-title"><Typewriter text={data.name} speed={60} /></h1>
           <p className="hero-about">{data.about}</p>
           <div className="hero-actions">
@@ -516,12 +685,18 @@ function App() {
               <article key={group.category} className="skills-panel">
                 <h3 className="skills-category">{group.category}</h3>
                 <div className="skill-cloud">
-                  {group.items?.map((skill) => (
-                    <span key={`${group.category}-${skill}`} className="skill-chip">
-                      <span className={`skill-icon ${getSkillIconVariant(skill)}`} aria-hidden="true" />
-                      <span>{skill}</span>
-                    </span>
-                  ))}
+                  {group.items?.map((skill) => {
+                    const SkillIcon = getSkillIcon(skill)
+                    const iconColor = getSkillIconColor(skill)
+                    return (
+                      <span key={`${group.category}-${skill}`} className="skill-chip">
+                        <span className="skill-icon" aria-hidden="true">
+                          <SkillIcon style={{ color: iconColor }} />
+                        </span>
+                        <span>{skill}</span>
+                      </span>
+                    )
+                  })}
                 </div>
               </article>
             ))}
@@ -605,7 +780,7 @@ function App() {
 
       <footer className="site-footer">
         <p>All rights reserved, K Mahesh Chandran</p>
-        <p>{data.contact.address || data.contact.location || 'Address: Add your address in data.js'}</p>
+        <p>400703 - IN</p>
       </footer>
     </div>
   )
