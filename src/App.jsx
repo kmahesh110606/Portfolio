@@ -458,7 +458,7 @@ function App() {
 
       <header className="site-header">
         <div className="site-header-top">
-          <a className="brand" href="#home">{data.name}</a>
+          <a className="brand" href="#home">kmahesh110606</a>
           <div className="header-actions">
             <button
               type="button"
@@ -511,10 +511,7 @@ function App() {
 
         <section id="skills" className="section" data-reveal>
           <h2 className="section-title">Skills</h2>
-          <div
-            className="skills-grid"
-            style={{ '--skills-cols': Math.max(1, skillGroups.length) }}
-          >
+          <div className="skills-grid">
             {skillGroups.map((group) => (
               <article key={group.category} className="skills-panel">
                 <h3 className="skills-category">{group.category}</h3>

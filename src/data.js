@@ -28,12 +28,9 @@ const data = {
     {
       category: 'Programming & Development',
       items: [
-        'ReactJS',
-        'Vite',
-        'JavaScript',
-        'HTML',
-        'CSS',
-        'Tailwind',
+        'React+Vite',
+        'JavaScript | TypeScript',
+        'HTML | CSS | TailWindCSS',
         'Flask (Python)',
         'SQLite3',
         'Django',
